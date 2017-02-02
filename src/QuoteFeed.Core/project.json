@@ -1,0 +1,17 @@
+﻿{
+  "version": "0.1.0-*",
+  "buildOptions": {
+    "emitEntryPoint": false
+  },
+
+  "dependencies": {
+    "Microsoft.NETCore.App": "1.1.0",
+    "Lykke.Common": "1.1.5"
+  },
+
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": [ "dnxcore50" ]
+    }
+  }
+}

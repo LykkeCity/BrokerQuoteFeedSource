@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0-*",
+  "buildOptions": {
+    "emitEntryPoint": false
+  },
+
+  "dependencies": {
+    "Lykke.AzureStorage": "1.2.6",
+    "Lykke.Common": "1.1.5",
+    "Lykke.RabbitMqBroker": "1.0.18",
+    "Microsoft.NETCore.App": "1.1.0",
+    "QuoteFeed.Core": "0.1.0-*"
+  },
+
+  "frameworks": {
+    "netcoreapp1.1": {
+      "imports": [ "dnxcore50", "portable-net45+win8" ]
+    }
+  }
+}
