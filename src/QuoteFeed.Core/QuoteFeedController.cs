@@ -66,10 +66,10 @@ namespace QuoteFeed.Core
                 };
                 isUpdated = true;
             }
-            else if ((order.IsBuy && extremPrice > currentQuote.Price)
-                    || (!order.IsBuy && extremPrice < currentQuote.Price))
+            else if (((order.IsBuy && extremPrice > currentQuote.Price) || (!order.IsBuy && extremPrice < currentQuote.Price))
+                   && order.Timestamp >= currentQuote.Timestamp)
             {
-                // Update quote
+                // Update quote when price is extrem and datetime is newer
                 currentQuote = new Quote()
                 {
                     AssetPair = order.AssetPair,
@@ -97,15 +97,19 @@ namespace QuoteFeed.Core
             {
                 errors.Add("Argument 'Order' is null.");
             }
-            if (string.IsNullOrEmpty(order.AssetPair))
+            if (order != null && string.IsNullOrEmpty(order.AssetPair))
             {
                 errors.Add(string.Format("Invalid 'AssetPair': '{0}'", order.AssetPair ?? ""));
             }
-            if (order.Timestamp == DateTime.MinValue || order.Timestamp == DateTime.MaxValue)
+            if (order != null && (order.Timestamp == DateTime.MinValue || order.Timestamp == DateTime.MaxValue))
             {
-                errors.Add(string.Format("Invalid 'Timestamp': '{0}'", order.AssetPair ?? ""));
+                errors.Add(string.Format("Invalid 'Timestamp' range: '{0}'", order.Timestamp));
             }
-            if (order.Prices == null)
+            if (order != null && order.Timestamp.Kind != DateTimeKind.Utc)
+            {
+                errors.Add(string.Format("Invalid 'Timestamp' Kind (UTC is required): '{0}'", order.Timestamp));
+            }
+            if (order != null && order.Prices == null)
             {
                 errors.Add("Invalid 'Price': null");
             }
