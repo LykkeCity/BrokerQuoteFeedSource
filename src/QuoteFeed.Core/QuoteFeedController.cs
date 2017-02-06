@@ -15,6 +15,9 @@ namespace QuoteFeed.Core
 
         private IQuotePublisher publisher;
         private ILog logger;
+        // Storage for current quotes. Samples:
+        // { "BTCUSD_buy", { asset: "BTCUSD", isBuy: true, price: 100, timestamp: ... } }
+        // { "BTCUSD_sell", { asset: "BTCEUR", isBuy: false, price: 101, timestamp: ... } }
         private Dictionary<string, Quote> currentQuotes = new Dictionary<string, Quote>();
 
         public QuoteFeedController(IQuotePublisher publisher, ILog logger)
@@ -53,7 +56,7 @@ namespace QuoteFeed.Core
             // Compare new order with current min/max
             Quote currentQuote;
             bool isUpdated = false;
-            string key = order.AssetPair + (order.IsBuy ? "buy" : "sell");
+            string key = order.AssetPair + (order.IsBuy ? "_buy" : "_sell");
             if (!currentQuotes.TryGetValue(key, out currentQuote))
             {
                 // Initialize quote
@@ -66,8 +69,7 @@ namespace QuoteFeed.Core
                 };
                 isUpdated = true;
             }
-            else if (((order.IsBuy && extremPrice > currentQuote.Price) || (!order.IsBuy && extremPrice < currentQuote.Price))
-                   && order.Timestamp >= currentQuote.Timestamp)
+            else if (extremPrice != currentQuote.Price && order.Timestamp >= currentQuote.Timestamp)
             {
                 // Update quote when price is extrem and datetime is newer
                 currentQuote = new Quote()

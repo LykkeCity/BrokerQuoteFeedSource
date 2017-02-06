@@ -70,7 +70,7 @@ namespace QuoteFeed.Core.Tests
         }
 
         [Fact]
-        public void QuoteIsNotUpdatedWhenPriceIsNotExtrem()
+        public void QuoteIsNotUpdatedWhenPriceIsSame()
         {
             LoggerStub logger = new LoggerStub();
             QuotePublisherStub publisher = new QuotePublisherStub();
@@ -86,7 +86,7 @@ namespace QuoteFeed.Core.Tests
 
             // BTCUSD / BUY, 2nd order
             controller.ProcessOrderbook(new Order("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), new[] {
-                    new VolumePrice() { Volume = 1, Price = 999 }
+                    new VolumePrice() { Volume = 1, Price = 1000 }
                  })).Wait();
 
             Assert.Equal(1, publisher.Published.Count);
@@ -101,10 +101,50 @@ namespace QuoteFeed.Core.Tests
 
             // BTCRUB / SELL, 2nd order
             controller.ProcessOrderbook(new Order("btcrub", false, Utils.ParseUtc("2017-01-02 10:10:10Z"), new[] {
-                     new VolumePrice() { Volume = 1, Price = 60 }
+                     new VolumePrice() { Volume = 1, Price = 50 }
                  })).Wait();
 
             Assert.Equal(2, publisher.Published.Count);
+        }
+
+        [Fact]
+        public void QuoteIsUpdatedOnPriceChanges()
+        {
+            LoggerStub logger = new LoggerStub();
+            QuotePublisherStub publisher = new QuotePublisherStub();
+            QuoteFeedController controller = new QuoteFeedController(publisher, logger);
+
+            // BTCUSD / BUY, 1st order
+            controller.ProcessOrderbook(new Order("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), new[] {
+                    new VolumePrice() { Volume = 1, Price = 999 }, new VolumePrice() { Volume = 1, Price = 1000 }
+                 })).Wait();
+
+            Assert.Equal(1, publisher.Published.Count);
+            publisher.Published.Last().Equals(new Quote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), 1000.0));
+
+            // BTCUSD / BUY, 2nd order
+            controller.ProcessOrderbook(new Order("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), new[] {
+                    new VolumePrice() { Volume = 1, Price = 1.0 }
+                 })).Wait();
+
+            Assert.Equal(2, publisher.Published.Count);
+            publisher.Published.Last().Equals(new Quote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), 1.0));
+
+            // BTCRUB / SELL, 1st order
+            controller.ProcessOrderbook(new Order("btcrub", false, Utils.ParseUtc("2017-01-02 10:10:10Z"), new[] {
+                     new VolumePrice() { Volume = 1, Price = 50 }, new VolumePrice() { Volume = 1, Price = 60 }
+                 })).Wait();
+
+            Assert.Equal(3, publisher.Published.Count);
+            publisher.Published.Last().Equals(new Quote("btcrub", false, Utils.ParseUtc("2017-01-02 10:10:10Z"), 50));
+
+            // BTCRUB / SELL, 2nd order
+            controller.ProcessOrderbook(new Order("btcrub", false, Utils.ParseUtc("2017-01-02 10:10:11Z"), new[] {
+                     new VolumePrice() { Volume = 1, Price = 55 }
+                 })).Wait();
+
+            Assert.Equal(4, publisher.Published.Count);
+            publisher.Published.Last().Equals(new Quote("btcrub", false, Utils.ParseUtc("2017-01-02 10:10:11Z"), 55));
         }
 
         [Fact]
