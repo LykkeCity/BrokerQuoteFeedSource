@@ -69,9 +69,12 @@ namespace QuoteFeed.Core
                 };
                 isUpdated = true;
             }
-            else if (extremPrice != currentQuote.Price && order.Timestamp >= currentQuote.Timestamp)
+            else if ((order.Timestamp > currentQuote.Timestamp && extremPrice != currentQuote.Price)
+                || (order.Timestamp == currentQuote.Timestamp 
+                    && ((order.IsBuy && extremPrice > currentQuote.Price) || (!order.IsBuy && extremPrice < currentQuote.Price)))
+                )
             {
-                // Update quote when price is extrem and datetime is newer
+                // Update quote when price changed and datetime is newer or when datetime is the same but price is better
                 currentQuote = new Quote()
                 {
                     AssetPair = order.AssetPair,
