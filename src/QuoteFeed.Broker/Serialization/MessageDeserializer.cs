@@ -10,8 +10,13 @@ namespace QuoteFeed.Broker.Serialization
     {
         public Order Deserialize(byte[] data)
         {
+            JsonSerializerSettings settings = new JsonSerializerSettings()
+            {
+                 DateTimeZoneHandling = DateTimeZoneHandling.Utc // treat datetime as Utc
+            };
+
             string json = Encoding.UTF8.GetString(data);
-            return JsonConvert.DeserializeObject<Order>(json);
+            return JsonConvert.DeserializeObject<Order>(json, settings);
         }
     }
 }
