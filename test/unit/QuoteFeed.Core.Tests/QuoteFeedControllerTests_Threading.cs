@@ -16,11 +16,14 @@ namespace QuoteFeed.Core.Tests
         public void MultipleOrdersShouldBeProcessedConsecutively()
         {
             LoggerStub logger = new LoggerStub();
+            // Assume that publisher execution takes some time (random number of seconds)
             QuotePublisherStub publisher = new QuotePublisherStub(async (Quote q) => {
-                await Task.Delay(TimeSpan.FromSeconds(1));
+                int duration = new Random().Next(1, 3);
+                await Task.Delay(TimeSpan.FromSeconds(duration));
             });
             QuoteFeedController controller = new QuoteFeedController(publisher, logger);
 
+            // Produce multiple orders and wait for publishing
             List<Task> tasks = new List<Task>(TASKS_COUNT);
             for (int i = 0; i < TASKS_COUNT; i++)
             {
@@ -30,7 +33,10 @@ namespace QuoteFeed.Core.Tests
             }
 
             Task.WaitAll(tasks.ToArray());
-
+            
+            // There should be the same number of events as the number of incoming orders.
+            // If orders were processed in different order, there would be less events
+            // as the price is constantly increasing.
             Assert.Equal(TASKS_COUNT, publisher.Published.Count);
         }
     }

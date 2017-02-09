@@ -6,13 +6,20 @@
 
   "dependencies": {
     "Lykke.AzureStorage": "1.2.6",
-    "Lykke.Common": "1.1.5",
+    "Lykke.Common": "1.1.9",
     "Lykke.RabbitMqBroker": "1.0.18",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.1.0"
     },
-    "QuoteFeed.Core": "0.1.0-*"
+    "QuoteFeed.Core": "0.1.0-*",
+    "Lykke.Logs": "1.0.6",
+    "Lykke.SlackNotifications": "1.0.10",
+    "Lykke.SlackNotification.AzureQueue": "1.0.4",
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Configuration.Binder": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0"
   },
 
   "frameworks": {

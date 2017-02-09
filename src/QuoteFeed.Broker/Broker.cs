@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
+using Common;
 using Common.Log;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
@@ -18,13 +19,11 @@ namespace QuoteFeed.Broker
         void Start();
     }
 
-    public interface IStoppable
+    internal sealed class Broker : IQuotePublisher, IStartable, IStopable, IDisposable
     {
-        void Stop();
-    }
+        private readonly static string COMPONENT_NAME = "BrokerQuoteFeed";
+        private readonly static string PROCESS = "Broker";
 
-    internal sealed class Broker : IQuotePublisher, IStartable, IStoppable, IDisposable
-    {
         private RabbitMqSubscriber<Order> subscriber;
         private RabbitMqPublisher<Quote> publisher;
         private QuoteFeedController controller;
@@ -52,7 +51,7 @@ namespace QuoteFeed.Broker
 
             this.logger = logger;
 
-            controller = new QuoteFeedController(this, logger);
+            this.controller = new QuoteFeedController(this, logger, COMPONENT_NAME);
         }
 
         public async Task Publish(Quote quote)
@@ -112,8 +111,7 @@ namespace QuoteFeed.Broker
         {
             if (this.isDisposed)
             {
-                // TODO: Fill missing arguments
-                this.logger.WriteErrorAsync("", "", "", new InvalidOperationException("Disposed object Broker has been called"), DateTime.Now);
+                this.logger.WriteErrorAsync(COMPONENT_NAME, PROCESS, "", new InvalidOperationException("Disposed object Broker has been called"), DateTime.Now);
             }
         }
         #endregion

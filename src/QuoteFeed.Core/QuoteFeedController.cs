@@ -11,19 +11,21 @@ namespace QuoteFeed.Core
 {
     public sealed class QuoteFeedController
     {
-        private readonly static string SERVICE_NAME = "QuoteFeed";
+        private readonly static string PROCESS = "QuoteFeedController";
 
-        private IQuotePublisher publisher;
-        private ILog logger;
+        private readonly IQuotePublisher publisher;
+        private readonly ILog logger;
+        private readonly string componentName;
         // Storage for current quotes. Samples:
         // { "BTCUSD_buy", { asset: "BTCUSD", isBuy: true, price: 100, timestamp: ... } }
         // { "BTCUSD_sell", { asset: "BTCEUR", isBuy: false, price: 101, timestamp: ... } }
-        private Dictionary<string, Quote> currentQuotes = new Dictionary<string, Quote>();
+        private readonly Dictionary<string, Quote> currentQuotes = new Dictionary<string, Quote>();
 
-        public QuoteFeedController(IQuotePublisher publisher, ILog logger)
+        public QuoteFeedController(IQuotePublisher publisher, ILog logger, string componentName = "")
         {
             this.publisher = publisher;
             this.logger = logger;
+            this.componentName = componentName;
         }
 
         public async Task ProcessOrderbook(Order order)
@@ -35,16 +37,14 @@ namespace QuoteFeed.Core
             {
                 foreach(string error in validationErrors)
                 {
-                    // TODO: Fill missing values
-                    await this.logger.WriteErrorAsync(SERVICE_NAME, "", "", new ArgumentException("Received invalid order. " + error));
+                    await this.logger.WriteErrorAsync(this.componentName, PROCESS, String.Empty, new ArgumentException("Received invalid order. " + error));
                 }
                 return; // Skipping invalid orders
             }
 
             if (order.Prices.Count == 0)
             {
-                // TODO: Add order value to log
-                await this.logger.WriteWarningAsync(SERVICE_NAME, "", "", "Order does not contain any prices. Skipping.");
+                await this.logger.WriteWarningAsync(this.componentName, PROCESS, String.Empty, "Order does not contain any prices. Skipping.");
                 return; // Skipping empty orders
             }
 
