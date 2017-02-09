@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core.Contracts
 {

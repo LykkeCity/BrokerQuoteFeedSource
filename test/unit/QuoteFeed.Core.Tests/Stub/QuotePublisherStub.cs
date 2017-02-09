@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using QuoteFeed.Core.Contracts;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core.Tests.Stub
 {

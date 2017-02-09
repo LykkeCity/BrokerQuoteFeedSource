@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "0.1.0-*",
   "testRunner": "xunit",
 
@@ -13,7 +13,8 @@
     "dotnet-test-xunit": "1.0.0-rc2-build10025",
     "QuoteFeed.Core": {
       "target": "project"
-    }
+    },
+    "Lykke.Domain.Prices": "0.1.0-*"
   },
 
   "frameworks": {

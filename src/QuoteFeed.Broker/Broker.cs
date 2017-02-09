@@ -3,14 +3,15 @@ using System.Threading.Tasks;
 
 using Common;
 using Common.Log;
+using Lykke.Domain.Prices.Model;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.RabbitMqBroker.Publisher;
 
 using QuoteFeed.Broker.Serialization;
-using QuoteFeed.Core.Model;
 using QuoteFeed.Core;
 using QuoteFeed.Core.Contracts;
+
 
 namespace QuoteFeed.Broker
 {

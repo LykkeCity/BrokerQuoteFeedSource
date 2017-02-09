@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Common.Log;
 using QuoteFeed.Core.Contracts;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core
 {

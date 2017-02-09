@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
 using Newtonsoft.Json;
+using Lykke.Domain.Prices.Model;
 using Lykke.RabbitMqBroker.Subscriber;
-using QuoteFeed.Core.Model;
 
 namespace QuoteFeed.Broker.Serialization
 {

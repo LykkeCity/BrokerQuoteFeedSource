@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using QuoteFeed.Core.Tests.Stub;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core.Tests
 {
@@ -28,11 +28,11 @@ namespace QuoteFeed.Core.Tests
             QuotePublisherStub publisher = new QuotePublisherStub();
             QuoteFeedController controller = new QuoteFeedController(publisher, logger);
 
-            controller.ProcessOrderbook(new Order(null, true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new[] {
+            controller.ProcessOrderbook(CreateOrder(null, true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new[] {
                      new VolumePrice() { Volume = 1, Price = 100 }
                  })).Wait();
 
-            controller.ProcessOrderbook(new Order("", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new[] {
+            controller.ProcessOrderbook(CreateOrder("", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new[] {
                      new VolumePrice() { Volume = 1, Price = 100 }
                  })).Wait();
             Assert.Equal(0, publisher.Published.Count);
@@ -45,8 +45,8 @@ namespace QuoteFeed.Core.Tests
             QuotePublisherStub publisher = new QuotePublisherStub();
             QuoteFeedController controller = new QuoteFeedController(publisher, logger);
 
-            controller.ProcessOrderbook(new Order("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), null)).Wait();
-            controller.ProcessOrderbook(new Order("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new VolumePrice[] { })).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), null)).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), new VolumePrice[] { })).Wait();
             Assert.Equal(0, publisher.Published.Count);
         }
 
@@ -60,10 +60,10 @@ namespace QuoteFeed.Core.Tests
             DateTime unspecified = new DateTime(2017, 1, 1, 0, 0, 0, DateTimeKind.Unspecified);
             DateTime local = new DateTime(2017, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
-            controller.ProcessOrderbook(new Order("btc", true, unspecified, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
-            controller.ProcessOrderbook(new Order("btc", true, local, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
-            controller.ProcessOrderbook(new Order("btc", true, DateTime.MinValue, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
-            controller.ProcessOrderbook(new Order("btc", true, DateTime.MaxValue, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, unspecified, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, local, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, DateTime.MinValue, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
+            controller.ProcessOrderbook(CreateOrder("btc", true, DateTime.MaxValue, new VolumePrice[] { new VolumePrice() { Volume = 1, Price = 100 } })).Wait();
             Assert.Equal(0, publisher.Published.Count);
         }
     }

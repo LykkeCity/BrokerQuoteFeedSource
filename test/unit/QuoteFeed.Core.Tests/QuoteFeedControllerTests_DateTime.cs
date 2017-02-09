@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using QuoteFeed.Core.Tests.Stub;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core.Tests
 {
@@ -21,20 +21,20 @@ namespace QuoteFeed.Core.Tests
             QuoteFeedController controller = new QuoteFeedController(publisher, logger);
 
             // BTCUSD / BUY, 1st order
-            controller.ProcessOrderbook(new Order("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), new[] {
+            controller.ProcessOrderbook(CreateOrder("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), new[] {
                     new VolumePrice() { Volume = 1, Price = 999 }, new VolumePrice() { Volume = 1, Price = 1000 }
                  })).Wait();
 
             Assert.Equal(1, publisher.Published.Count);
-            publisher.Published.Last().Equals(new Quote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), 1000.0));
+            publisher.Published.Last().Equals(CreateQuote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:10Z"), 1000.0));
 
             // BTCUSD / BUY, 2nd order
-            controller.ProcessOrderbook(new Order("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), new[] {
+            controller.ProcessOrderbook(CreateOrder("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), new[] {
                      new VolumePrice() { Volume = 1, Price = 1001 }, new VolumePrice() { Volume = 1, Price = 999 }
                  })).Wait();
 
             Assert.Equal(2, publisher.Published.Count);
-            publisher.Published.Last().Equals(new Quote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), 1001.0));
+            publisher.Published.Last().Equals(CreateQuote("btcusd", true, Utils.ParseUtc("2017-01-01 10:10:11Z"), 1001.0));
 
             /// Check Kind
             foreach(var quote in publisher.Published)

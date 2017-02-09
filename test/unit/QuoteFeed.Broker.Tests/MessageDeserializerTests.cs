@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Xunit;
 
 using QuoteFeed.Broker.Serialization;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Broker.Tests
 {

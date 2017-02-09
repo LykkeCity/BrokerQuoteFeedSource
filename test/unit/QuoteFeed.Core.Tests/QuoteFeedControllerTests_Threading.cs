@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using QuoteFeed.Core.Tests.Stub;
-using QuoteFeed.Core.Model;
+using Lykke.Domain.Prices.Model;
 
 namespace QuoteFeed.Core.Tests
 {
@@ -27,7 +27,7 @@ namespace QuoteFeed.Core.Tests
             List<Task> tasks = new List<Task>(TASKS_COUNT);
             for (int i = 0; i < TASKS_COUNT; i++)
             {
-                var task = controller.ProcessOrderbook(new Order("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), 
+                var task = controller.ProcessOrderbook(CreateOrder("btc", true, Utils.ParseUtc("2017-01-01 10:10:12Z"), 
                     new[] { new VolumePrice() { Volume = 1, Price = i } }));
                 tasks.Add(task);
             }
