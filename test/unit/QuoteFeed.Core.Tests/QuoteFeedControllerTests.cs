@@ -277,7 +277,7 @@ namespace QuoteFeed.Core.Tests
             Assert.Equal(2, publisher.Published.Count);
         }
 
-        private Order CreateOrder(string asset, bool isBuy, DateTime timestamp, IList<VolumePrice> prices)
+        private Order CreateOrder(string asset, bool isBuy, DateTime timestamp, VolumePrice[] prices)
         {
             return new Order()
             {
