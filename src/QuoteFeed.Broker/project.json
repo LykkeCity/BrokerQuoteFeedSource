@@ -1,6 +1,14 @@
 {
   "version": "0.1.0-*",
   "buildOptions": {
+    "copyToOutput": {
+      "include": [
+        "appsettings.json",
+        "appsettings.development.json",
+        "appsettings.production.json",
+        "appsettings.staging.json"
+      ]
+    },
     "emitEntryPoint": true
   },
 

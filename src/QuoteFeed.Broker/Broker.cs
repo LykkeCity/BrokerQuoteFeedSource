@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 
 using Common;
 using Common.Log;
+using Lykke.Domain.Prices;
 using Lykke.Domain.Prices.Model;
 using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
@@ -47,8 +48,9 @@ namespace QuoteFeed.Broker
 
             this.publisher =
                 new RabbitMqPublisher<Quote>(rabbitMqPublisherSettings)
-                .SetLogger(logger)
-                .SetSerializer(new MessageSerializer());
+                .SetPublishStrategy(new DefaultFnoutPublishStrategy("", durable: true))
+                .SetSerializer(new MessageSerializer())
+                .SetLogger(logger);
 
             this.logger = logger;
 
@@ -57,7 +59,16 @@ namespace QuoteFeed.Broker
 
         public async Task Publish(Quote quote)
         {
-            await this.publisher.ProduceAsync(quote);
+            if (quote != null)
+            {
+                await this.logger.WriteInfoAsync(COMPONENT_NAME, string.Empty, string.Empty, "Publishing quote: " + quote.ToJson());
+                await this.publisher.ProduceAsync(quote);
+            }
+            else
+            {
+                await this.logger.WriteErrorAsync(COMPONENT_NAME, string.Empty, string.Empty, 
+                    new ArgumentNullException(nameof(quote), "Tried to publish <NULL> message."));
+            }
         }
 
         public void Start()
@@ -84,7 +95,15 @@ namespace QuoteFeed.Broker
 
         private async Task HandleMessage(Order order)
         {
-            await this.controller.ProcessOrderbook(order);
+            if (order != null)
+            {
+                await this.logger.WriteInfoAsync(COMPONENT_NAME, string.Empty, string.Empty, "Received order: " + order.ToJson());
+                await this.controller.ProcessOrderbook(order);
+            }
+            else
+            {
+                await this.logger.WriteWarningAsync(COMPONENT_NAME, string.Empty, string.Empty, "Received order <NULL>.");
+            }
         }
 
         #region "IDisposable implementation"
