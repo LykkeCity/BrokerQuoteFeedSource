@@ -53,7 +53,6 @@ namespace QuoteFeed.Broker
         {
             if (quote != null)
             {
-                await this.logger.WriteInfoAsync(COMPONENT_NAME, string.Empty, string.Empty, "Publishing quote: " + quote.ToJson());
                 await this.publisher.ProduceAsync(quote);
             }
             else
@@ -68,7 +67,6 @@ namespace QuoteFeed.Broker
         {
             if (order != null)
             {
-                await this.logger.WriteInfoAsync(COMPONENT_NAME, string.Empty, string.Empty, "Received order: " + order.ToJson());
                 await this.controller.ProcessOrderbook(order);
             }
             else
