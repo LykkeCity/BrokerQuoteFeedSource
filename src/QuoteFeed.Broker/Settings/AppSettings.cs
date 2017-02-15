@@ -9,9 +9,11 @@ namespace QuoteFeed.Broker
 {
     internal class AppSettings
     {
+        public SlackNotificationsSettings SlackNotifications { get; set; } = new SlackNotificationsSettings();
+        public ApplicationLogsSettings ApplicationLogs { get; set; } = new ApplicationLogsSettings();
+
         public RabbitMqSettings RabbitMq { get; set; } = new RabbitMqSettings();
         public QuotesCandlesHistorySettings QuotesCandlesHistory { get; set; } = new QuotesCandlesHistorySettings();
-        public SlackNotificationsSettings SlackNotifications { get; set; } = new SlackNotificationsSettings();
 
         public class RabbitMqSettings
         {
@@ -33,6 +35,11 @@ namespace QuoteFeed.Broker
         public class SlackNotificationsSettings
         {
             public AzureQueueSettings AzureQueue { get; set; } = new AzureQueueSettings();
+        }
+
+        public class ApplicationLogsSettings
+        {
+            public string AzureConnectionString { get; set; }
         }
     }
 }

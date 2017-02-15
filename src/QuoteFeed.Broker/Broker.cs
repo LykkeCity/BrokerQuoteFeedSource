@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 
 using Common;
 using Common.Log;
-using Lykke.Domain.Prices;
 using Lykke.Domain.Prices.Model;
-using Lykke.RabbitMqBroker;
 using Lykke.RabbitMqBroker.Subscriber;
 using Lykke.RabbitMqBroker.Publisher;
 
@@ -13,15 +11,9 @@ using QuoteFeed.Broker.Serialization;
 using QuoteFeed.Core;
 using QuoteFeed.Core.Contracts;
 
-
 namespace QuoteFeed.Broker
 {
-    public interface IStartable
-    {
-        void Start();
-    }
-
-    internal sealed class Broker : IQuotePublisher, IStartable, IStopable, IDisposable
+    internal sealed class Broker : IQuotePublisher
     {
         private readonly static string COMPONENT_NAME = "BrokerQuoteFeed";
         private readonly static string PROCESS = "Broker";
@@ -35,24 +27,24 @@ namespace QuoteFeed.Broker
         private bool isDisposed = false;
 
         public Broker(
-            RabbitMqSettings rabitMqSubscriberSettings, 
-            RabbitMqSettings rabbitMqPublisherSettings, 
+            RabbitMqSubscriber<Order> subscriber,
+            RabbitMqPublisher<Quote> publisher, 
             ILog logger)
         {
-            this.subscriber =
-                new RabbitMqSubscriber<Order>(rabitMqSubscriberSettings)
+            this.logger = logger;
+            this.subscriber = subscriber;
+            this.publisher = publisher;
+
+            subscriber
                   .SetMessageDeserializer(new MessageDeserializer())
                   .SetMessageReadStrategy(new MessageReadWithTemporaryQueueStrategy())
                   .Subscribe(HandleMessage)
                   .SetLogger(logger);
 
-            this.publisher =
-                new RabbitMqPublisher<Quote>(rabbitMqPublisherSettings)
+            publisher
                 .SetPublishStrategy(new DefaultFnoutPublishStrategy("", durable: true))
                 .SetSerializer(new MessageSerializer())
                 .SetLogger(logger);
-
-            this.logger = logger;
 
             this.controller = new QuoteFeedController(this, logger, COMPONENT_NAME);
         }
@@ -71,27 +63,6 @@ namespace QuoteFeed.Broker
             }
         }
 
-        public void Start()
-        {
-            EnsureNotDisposed();
-            if (!this.isStarted)
-            {
-                this.subscriber.Start();
-                this.publisher.Start();
-                this.isStarted = true;
-            }
-        }
-
-        public void Stop()
-        {
-            EnsureNotDisposed();
-            if (this.isStarted)
-            {
-                this.subscriber.Stop();
-                this.publisher.Stop();
-                this.isStarted = false;
-            }
-        }
 
         private async Task HandleMessage(Order order)
         {
@@ -105,35 +76,5 @@ namespace QuoteFeed.Broker
                 await this.logger.WriteWarningAsync(COMPONENT_NAME, string.Empty, string.Empty, "Received order <NULL>.");
             }
         }
-
-        #region "IDisposable implementation"
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-        ~Broker()
-        {
-            Dispose(false);
-        }
-
-        private void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                // get rid of managed resources
-            }
-            // get rid of unmanaged resources
-            this.isDisposed = true;
-        }
-
-        private void EnsureNotDisposed()
-        {
-            if (this.isDisposed)
-            {
-                this.logger.WriteErrorAsync(COMPONENT_NAME, PROCESS, "", new InvalidOperationException("Disposed object Broker has been called"), DateTime.Now);
-            }
-        }
-        #endregion
     }
 }
