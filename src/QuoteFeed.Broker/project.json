@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0-*",
+  "version": "1.0.0-*",
   "buildOptions": {
     "copyToOutput": {
       "include": [
@@ -20,7 +20,7 @@
       "type": "platform",
       "version": "1.1.0"
     },
-    "QuoteFeed.Core": "0.1.0-*",
+    "QuoteFeed.Core": { "target": "project" },
     "Lykke.Logs": "1.0.6",
     "Lykke.SlackNotifications": "1.0.10",
     "Lykke.SlackNotification.AzureQueue": "1.0.4",

@@ -29,7 +29,7 @@ namespace QuoteFeed.Broker
 
         public void ConfigureServices(ContainerBuilder builder, ILog log)
         {
-            var mq = settings.RabbitMq;
+            var mq = settings.BrokerQuoteFeed.RabbitMq;
             var connectionsString = $"amqp://{mq.Username}:{mq.Password}@{mq.Host}:{mq.Port}";
             var subscriberSettings = new RabbitMqSettings()
             {

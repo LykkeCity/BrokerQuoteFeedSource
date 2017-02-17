@@ -26,7 +26,7 @@ namespace QuoteFeed.Broker
             {
                 log.Info("Reading application settings.");
                 var config = new ConfigurationBuilder()
-                    .AddJsonFile("appsettings.json", optional: true)
+                    //.AddJsonFile("appsettings.json", optional: true)
                     .AddEnvironmentVariables()
                     .Build();
 
@@ -81,7 +81,7 @@ namespace QuoteFeed.Broker
             var log = logAggregate.CreateLogger();
             var slackSender = services.UseSlackNotificationsSenderViaAzureQueue(appSettings.SlackNotifications.AzureQueue, log);
             var azureLog = new LykkeLogToAzureStorage(appName,
-                new AzureTableStorage<LogEntity>(appSettings.ApplicationLogs.AzureConnectionString, appName + "Logs", log),
+                new AzureTableStorage<LogEntity>(appSettings.BrokerQuoteFeed.ConnectionStrings.LogsConnectionString, appName + "Logs", log),
                 slackSender);
             logAggregate.AddLogger(azureLog);
         }
