@@ -16,8 +16,7 @@
     },
     "QuoteFeed.Core": {
       "target": "project"
-    },
-    "Lykke.Domain.Prices": "0.1.0-*"
+    }
   },
 
   "frameworks": {

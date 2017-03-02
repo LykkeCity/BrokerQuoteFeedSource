@@ -42,7 +42,7 @@ namespace QuoteFeed.Broker
                 QueueName = mq.QuoteFeed
             };
 
-            var subscriber = new RabbitMqSubscriber<Order>(subscriberSettings);
+            var subscriber = new RabbitMqSubscriber<OrderBook>(subscriberSettings);
             var publisher = new RabbitMqPublisher<Quote>(publisherSettings);
             var broker = new Broker(subscriber, publisher, log);
 

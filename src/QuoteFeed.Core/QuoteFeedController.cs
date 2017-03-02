@@ -28,7 +28,7 @@ namespace QuoteFeed.Core
             this.componentName = componentName;
         }
 
-        public async Task ProcessOrderbook(Order order)
+        public async Task ProcessOrderbook(OrderBook order)
         {
             // Validate
             // 
@@ -94,7 +94,7 @@ namespace QuoteFeed.Core
             }
         }
 
-        private ICollection<string> Validate(Order order)
+        private ICollection<string> Validate(OrderBook order)
         {
             List<string> errors = new List<string>();
 

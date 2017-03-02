@@ -18,7 +18,7 @@ namespace QuoteFeed.Broker
         private readonly static string COMPONENT_NAME = "BrokerQuoteFeed";
         private readonly static string PROCESS = "Broker";
 
-        private RabbitMqSubscriber<Order> subscriber;
+        private RabbitMqSubscriber<OrderBook> subscriber;
         private RabbitMqPublisher<Quote> publisher;
         private QuoteFeedController controller;
         private ILog logger;
@@ -27,7 +27,7 @@ namespace QuoteFeed.Broker
         private bool isDisposed = false;
 
         public Broker(
-            RabbitMqSubscriber<Order> subscriber,
+            RabbitMqSubscriber<OrderBook> subscriber,
             RabbitMqPublisher<Quote> publisher, 
             ILog logger)
         {
@@ -63,7 +63,7 @@ namespace QuoteFeed.Broker
         }
 
 
-        private async Task HandleMessage(Order order)
+        private async Task HandleMessage(OrderBook order)
         {
             if (order != null)
             {

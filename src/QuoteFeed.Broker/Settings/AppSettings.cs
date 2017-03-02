@@ -25,10 +25,8 @@ namespace QuoteFeed.Broker
             public string Username { get; set; }
             public string Password { get; set; }
             public string ExchangeOrderbook { get; set; }
-            [JsonProperty("QuteFeed")]
             public string QuoteFeed { get; set; }
         }
-
 
         public class ConnectionStringsSettings
         {

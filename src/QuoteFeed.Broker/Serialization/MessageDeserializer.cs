@@ -6,9 +6,9 @@ using Lykke.RabbitMqBroker.Subscriber;
 
 namespace QuoteFeed.Broker.Serialization
 {
-    public class MessageDeserializer : IMessageDeserializer<Order>
+    public class MessageDeserializer : IMessageDeserializer<OrderBook>
     {
-        public Order Deserialize(byte[] data)
+        public OrderBook Deserialize(byte[] data)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {
@@ -16,7 +16,7 @@ namespace QuoteFeed.Broker.Serialization
             };
 
             string json = Encoding.UTF8.GetString(data);
-            return JsonConvert.DeserializeObject<Order>(json, settings);
+            return JsonConvert.DeserializeObject<OrderBook>(json, settings);
         }
     }
 }

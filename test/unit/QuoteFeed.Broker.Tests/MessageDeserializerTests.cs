@@ -20,7 +20,7 @@ namespace QuoteFeed.Broker.Tests
                 + "\"prices\":[{\"volume\":0.52,\"price\":933.89},{\"volume\":43.78618975,\"price\":933.88},{\"volume\":6.4028,\"price\":933.62}]}";
 
             var deserializer = new MessageDeserializer();
-            Order model = deserializer.Deserialize(Encoding.UTF8.GetBytes(json));
+            OrderBook model = deserializer.Deserialize(Encoding.UTF8.GetBytes(json));
 
             Assert.Equal(model.Timestamp, new DateTime(2017, 1, 31, 11, 38, 49, DateTimeKind.Utc));
             Assert.Equal(0, model.Timestamp.Kind.CompareTo(DateTimeKind.Utc));
@@ -34,7 +34,7 @@ namespace QuoteFeed.Broker.Tests
                 + "\"prices\":[{\"volume\":0.52,\"price\":933.89},{\"volume\":43.78618975,\"price\":933.88},{\"volume\":6.4028,\"price\":933.62}]}";
 
             var deserializer = new MessageDeserializer();
-            Order model = deserializer.Deserialize(Encoding.UTF8.GetBytes(json));
+            OrderBook model = deserializer.Deserialize(Encoding.UTF8.GetBytes(json));
 
             Assert.Equal(model.Timestamp, new DateTime(2009, 2, 15, 15, 2, 0, DateTimeKind.Utc));
             Assert.Equal(0, model.Timestamp.Kind.CompareTo(DateTimeKind.Utc));
