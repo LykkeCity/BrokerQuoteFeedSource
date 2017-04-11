@@ -4,7 +4,7 @@
   "dependencies": {
     "Microsoft.NETCore.App": "1.1.0",
     "Lykke.Domain.Prices": "0.7.0",
-    "Lykke.Common": "1.1.15"
+    "Lykke.Common": "1.1.67"
   },
 
   "frameworks": {
