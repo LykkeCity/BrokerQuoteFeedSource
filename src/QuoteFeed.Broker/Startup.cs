@@ -31,15 +31,17 @@ namespace QuoteFeed.Broker
         {
             var mq = settings.BrokerQuoteFeed.RabbitMq;
             var connectionsString = $"amqp://{mq.Username}:{mq.Password}@{mq.Host}:{mq.Port}";
-            var subscriberSettings = new RabbitMqSettings()
+            var subscriberSettings = new RabbitMqSubscriberSettings()
             {
                 ConnectionString = connectionsString,
-                QueueName = mq.ExchangeOrderbook
+                QueueName = mq.ExchangeOrderbook + ".quotefeedbroker",
+                ExchangeName = mq.ExchangeOrderbook,
+                IsDurable = true
             };
-            var publisherSettings = new RabbitMqSettings
+            var publisherSettings = new RabbitMqPublisherSettings
             {
                 ConnectionString = connectionsString,
-                QueueName = mq.QuoteFeed
+                ExchangeName = mq.QuoteFeed
             };
 
             var subscriber = new RabbitMqSubscriber<OrderBook>(subscriberSettings);
