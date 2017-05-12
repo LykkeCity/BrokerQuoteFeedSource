@@ -11,7 +11,11 @@
     },
     "emitEntryPoint": true
   },
-
+  "publishOptions": {
+    "include": [
+      "../../dockerfile"
+    ]
+  },
   "dependencies": {
     "Lykke.Common": "1.1.67",
     "Microsoft.NETCore.App": {

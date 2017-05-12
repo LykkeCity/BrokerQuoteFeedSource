@@ -1,5 +1,5 @@
 FROM microsoft/dotnet:latest
-ENV BROKER_SETTINGS_URL http://server/key
+ARG SOURCEDIR
 WORKDIR /brocker
-COPY src/QuoteFeed.Broker/bin/Release/PublishOutput/ .
+COPY ${SOURCEDIR} .
 ENTRYPOINT ["dotnet", "QuoteFeed.Broker.dll"]
